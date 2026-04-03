@@ -1,0 +1,9 @@
+@import "tailwindcss";
+body{
+  font-family: Arial, serif;
+}
+@tailwind utilities;
+
+
+
+

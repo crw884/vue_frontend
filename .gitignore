@@ -37,3 +37,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+/.example.env
+/public/photo_2025-04-19_00-52-02.jpg
+/public/indaclub.mp3

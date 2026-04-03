@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 export const useAuthStore = defineStore('auth', {
@@ -8,13 +7,15 @@ export const useAuthStore = defineStore('auth', {
         user: null,
         token: localStorage.getItem('token') || null,
         isAuthenticated: false,
+        message: "",
         errorMessage: "",
     }),
     actions: {
         async login(credentials) {
             this.errorMessage = ""
+            this.message = ""
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/login', credentials)
+                const response = await axios.post(backendUrl+'/login', credentials)
                 this.token = response.data.token
                 this.user = response.data.user
                 this.isAuthenticated = true
@@ -33,6 +34,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async getUser() {
             this.errorMessage = ''
+            this.message = ""
             try {
                 const response = await axios.get(backendUrl + '/user', {
                     headers: {
@@ -53,6 +55,8 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
+            this.errorMessage = ''
+            this.message = ""
             try {
                 const response = await axios.get(backendUrl + '/logout', {
                     headers: {
@@ -60,12 +64,14 @@ export const useAuthStore = defineStore('auth', {
                     },
                 })
                 this.errorCode = response.data.code
-                this.errorMessage = response.data.message
+                this.message = response.data.message
+
                 this.token = null
                 this.user = null
                 this.isAuthenticated = false
                 localStorage.removeItem('token')
             } catch (error) {
+
                 if (error.response) {
                     this.errorCode = 1
                     this.errorMessage = error.response.data.message

@@ -4,12 +4,7 @@
 
 <script>
     export default {
-        mounted() {
-            console.log('Component Home mounted.');
-        },
-        unmounted() {
-          console.log(`Component Home unmounted.`);
-        }
+
     }
 </script>
 
