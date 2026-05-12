@@ -1,18 +1,18 @@
 <template >
-    <div v-if="posts_total === 0" class="flex flex-col items-center justify-center mt-10">
+    <div v-if="posts_total === 0" class="flex flex-col items-center justify-center mt-24">
         <span>Публикации не найдены.</span>
     </div>
     <div
         v-if="posts_total > 0"
-        class="posts-container flex flex-col items-center justify-center mt-10"
+        class="posts-container flex flex-col items-center justify-center mt-24"
     >
         <div class="flex flex-col items-center justify-center w-6/12 h-auto" v-for="post in posts" :key="post.id">
             <div class="flex gap-7 w-full" >
                 <Image
 					v-if="post.image"
                     :src="post.image"
-                    alt="pi pi-loading"
-                    class="w-80  overflow-hidden aspect-square rounded-xl"
+                    alt="img"
+                    class="w-80 overflow-hidden aspect-square rounded-xl"
                     image-class="w-full h-full object-cover"
                     preview
                 />
@@ -23,7 +23,7 @@
 							<div>Автор: {{ post.user_name }}</div>
 						</div>
 
-						<div>{{ this.formatText(post.text) }}</div>
+						<div class="break-all">{{ this.formatText(post.text) }}</div>
 
 					</div>
 					<audio v-if="post.audio" controls :src="post.audio"
@@ -63,7 +63,7 @@ export default {
     data() {
         return {
             postStore: usePostStore(),
-            perpage: 2,
+            perpage: 4,
             page: 0,
             isLoading: false,
 
@@ -106,7 +106,10 @@ export default {
         },
 		formatText(text) {
 			if(!text) return ''
-			return text.substring(0, 80) + "..."
+			if(text.length > 80)
+				return text.substring(0, 80) + "..."
+			else
+				return text
 		}
     },
 }

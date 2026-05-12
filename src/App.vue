@@ -1,5 +1,5 @@
 <template>
-    <Menubar :model="items" class="m-2">
+    <Menubar id="menubar" :model="items" class=" max-w-screen fixed top-3 left-3 right-3 z-50">
         <template #start>
             <span class="mr-5 ml-5">Soundclown</span>
         </template>
@@ -48,7 +48,8 @@
             </div>
         </template>
     </Menubar>
-    <router-view> </router-view>
+    <router-view class="mt-24"> </router-view>
+	<Toast position="bottom-right" />
 </template>
 <script>
 import { useAuthStore } from '@/stores/authStore.js';
@@ -57,32 +58,25 @@ import Button from "primevue/button";
 import Menubar from "primevue/menubar";
 import InputText from "primevue/inputtext";
 import Message from 'primevue/message'
+import Toast from "primevue/toast";
 
 export default {
-	components: {Button, Menubar, InputText, Message},
+	components: {Button, Menubar, InputText, Message, Toast},
     data() {
         return {
             email: '',
             password: '',
             authStore: useAuthStore(),
             items: [
-                {
-                    label: 'Главная страница',
-                    icon: 'pi pi-home pi-fw',
-                    route: '/',
-                    shortcut: 'Ctrl + H',
-                    submenu: false,
-
-                },
-                {
+				{
+					label: 'Публикации',
+					icon: 'pi pi-warehouse pi-fw',
+					route: '/post',
+				},
+				{
                     label: 'Группы',
                     icon: 'pi pi-users pi-fw',
                     route: '/group',
-                },
-                {
-                    label: 'Публикации',
-                    icon: 'pi pi-warehouse pi-fw',
-                    route: '/post',
                 },
 				{
 					label: 'Пользователи',
