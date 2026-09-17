@@ -48,7 +48,7 @@
             </div>
         </template>
     </Menubar>
-    <router-view class="mt-24"> </router-view>
+    <router-view> </router-view>
 	<Toast position="bottom-right" />
 </template>
 <script>

@@ -10,6 +10,7 @@
         @page="onPageChange"
         responsive-layout="scroll"
         :first="offset"
+		class="mt-24"
     >
         <Column field="id" header="id" />
         <Column field="name" header="Никнейм" />

@@ -19,8 +19,14 @@
 				<div class="flex flex-col justify-between w-full">
 					<div class="flex flex-col items-end w-full gap-4 mb-5">
 						<div class="flex flex-row w-full justify-between">
-							<div>Группа: {{ post.group_name }}</div>
-							<div>Автор: {{ post.user_name }}</div>
+							<a @click="this.$router.push({name: 'Group', params:{ id : post.group_id}})">
+								{{ post.group_name }}
+							</a>
+							<div class="flex flex-row gap-2 items-center">
+								<div class="opacity-65 text-xs">{{formatDate(post.created_at)}}</div>
+								<div>Автор: {{ post.user_name }}</div>
+							</div>
+
 						</div>
 
 						<div class="break-all">{{ this.formatText(post.text) }}</div>
@@ -55,6 +61,7 @@ import ProgressSpinner from 'primevue/progressspinner'
 import Divider from 'primevue/divider'
 import { usePostStore } from '@/stores/postStore.js'
 import Image from 'primevue/image'
+import router from '@/router.js'
 
 export default {
     name: 'Posts',
@@ -86,6 +93,9 @@ export default {
         // this.onPostLoad()
     },
     methods: {
+		router() {
+			return router
+		},
         async onPostLoad() {
             if (!this.hasMore || this.isLoading) return
 

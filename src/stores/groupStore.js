@@ -8,6 +8,7 @@ export const useGroupStore = defineStore('group', {
         error_message: "",
         error_code: 0,
         loading: false,
+        new_id: 0,
     }),
     actions: {
         async get_groups(page = 0, perpage = 5, search = "") {
@@ -73,6 +74,7 @@ export const useGroupStore = defineStore('group', {
                 })
                 this.error_message = response.data.message
                 this.error_code = response.data.code
+                this.new_id = response.data.id
             } catch (error) {
                 if (error.response) {
                     this.error_code = 11
@@ -95,11 +97,16 @@ export const useGroupStore = defineStore('group', {
             this.loading = true
             this.error_message = ''
             try{
+                const hasImage = formData.has('image') && formData.get('image') instanceof File && formData.get('image').size > 0;
+
+                if (!hasImage) {
+                    formData.delete('image');
+                }
                 const response = await axios.post(backendUrl + '/group/' + id, formData,{
                     headers:{
                         'Content-Type': 'multipart/form-data',
                         Authorization: 'Bearer ' + localStorage.getItem('token')
-                    }
+                    },
                 })
                 this.error_message = response.data.message
                 this.error_code = response.data.code

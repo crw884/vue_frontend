@@ -13,28 +13,30 @@
             :first="offset"
         >
             <template #header>
+				<form v-on:submit.prevent="OnPushSearchButton()">
                 <InputText
                     v-model="search"
                     type="text"
                     id="search"
-                    required
                     placeholder="Поиск по имени"
                     class="m-2 sm:w-auto"
                 />
                 <Button
                     type="button"
                     @click="OnPushSearchButton()"
+					@keyup.enter="OnPushSearchButton()"
                     icon="pi pi-search"
                     label="Найти"
                     form="search"
                 />
+				</form>
             </template>
             <Column field="id" header="id" />
-            <Column field="image" header="">
-                <template #body="slotProps">
+            <Column field="image" header="" >
+                <template #body="slotProps" >
                     <router-link
                         :to="{ name: 'Group', params: { id: slotProps.data.id } }"
-                        class="gap-3 flex flex-row items-center"
+                        class="gap-3 flex flex-row items-end justify-end"
                     >
                         <Avatar
                             v-if="slotProps.data.image"
@@ -51,7 +53,6 @@
                         class="gap-3 flex flex-row items-center"
                     >
                         <span class="">{{ slotProps.data.name }}</span>
-                        <span class="pi pi-external-link"></span>
                     </router-link>
                 </template>
             </Column>
@@ -75,12 +76,15 @@
 					</div>
                 </template>
             </Column>
+			<template #footer="slotProps">
+				<div class="mb-3 mt-3 ml-3 w-full flex flex-row justify-end pr-5">
+					<router-link :to="{ name: 'GroupCreate' }" class="w-2xs">
+						<Button class="w-full" label="Создать группу"></Button>
+					</router-link>
+				</div>
+			</template>
         </DataTable>
-        <div class="mb-5 mt-3 ml-3 w-full flex flex-row justify-end pr-5">
-            <router-link :to="{ name: 'GroupCreate' }" class="w-2xs">
-                <Button class="w-full" label="Создать группу"></Button>
-            </router-link>
-        </div>
+
     </div>
 	<ConfirmPopup></ConfirmPopup>
 </template>
@@ -100,7 +104,7 @@ export default {
     data() {
         return {
             groupStore: useGroupStore(),
-            perpage: 2,
+            perpage: 3,
             offset: 0,
             search: '',
         }
@@ -131,6 +135,7 @@ export default {
         OnPushSearchButton(event) {
             this.groupStore.get_groups_total(this.search)
             this.groupStore.get_groups(undefined, undefined, this.search)
+			this.offset = 0
         },
         OpenPopUpConfirm(event, data) {
             this.$confirm.require({
@@ -159,7 +164,9 @@ export default {
 					detail: this.groupStore.error_message,
 					life: 4000,
 				})
-			this.groupStore.get_groups(this.offset / this.perpage, this.perpage, this.search)
+
+			await this.groupStore.get_groups(this.offset / this.perpage, this.perpage, this.search)
+			await this.groupStore.get_groups_total(this.search)
 		},
 		onEditButtonPush($event, data){
 			router.push({ name: 'GroupCreate', params: {id: data.id} })

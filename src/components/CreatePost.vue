@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center" v-if="authStore.user">
+    <div class="flex justify-center mt-24" v-if="authStore.user">
         <form v-on:submit.prevent="createPost" class="w-1/2 p-6">
             <h2 class="text-2xl mb-4 text-center">Создать пост</h2>
             <div class="flex flex-col">
@@ -51,7 +51,7 @@
             </div>
         </form>
     </div>
-	<div v-else class="flex justify-center mt-10">
+	<div v-else class="flex justify-center mt-24">
 		<p>Авторизуйтесь чтобы создавать посты.</p>
 	</div>
 </template>

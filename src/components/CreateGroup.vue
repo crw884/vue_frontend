@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center" v-if="authStore.user">
+    <div class="flex justify-center mt-24" v-if="authStore.user">
         <form v-on:submit.prevent="save" class="w-1/2 p-6">
             <h2 class="text-2xl mb-4 text-center">
                 {{ edit_mode ? 'Редактировать' : 'Создать' }} группу
@@ -49,7 +49,7 @@
                 ></Button>
             </div>
             <div class="flex flex-row gap-3 mb-5 mt-5 items-center">
-                <Checkbox v-model="group_private" binary input-id="is_private" />
+                <Checkbox v-model="group_private" :binary="true" input-id="is_private" />
                 <label for="is_private" class="justify-center flex items-center"
                     >Приватная группа</label
                 >
@@ -63,7 +63,7 @@
             </div>
         </form>
     </div>
-    <div v-else class="flex justify-center mt-10">
+    <div v-else class="flex justify-center mt-24">
         <p>Авторизуйтесь чтобы {{ edit_mode ? 'редактировать' : 'создавать' }} группы.</p>
     </div>
 </template>
@@ -86,12 +86,13 @@ export default {
     data() {
         return {
             groupStore: useGroupStore(),
+            authStore: useAuthStore(),
             group_name: '',
             group_description: '',
-            group_private: 0,
+            group_private: false,
             group_image: '',
             toast: useToast(),
-            authStore: useAuthStore(),
+            delete_image: false,
         }
     },
     computed: {
@@ -148,8 +149,9 @@ export default {
             formData.append('user_id', this.user_id)
             formData.append('name', this.group_name)
             formData.append('is_private', this.group_private)
-            formData.append('description', this.group_description)
+            formData.append('description', this.group_description ?? '')
             if (this.group_image != null) formData.append('image', this.group_image)
+            else formData.append('delete_image', true)
 
             await this.groupStore.edit_group(formData, this.group_id)
             if (this.errorCode !== 201)
@@ -172,7 +174,7 @@ export default {
             formData.append('user_id', this.user_id)
             formData.append('name', this.group_name)
             formData.append('is_private', this.group_private)
-            formData.append('description', this.group_description)
+            formData.append('description', this.group_description ?? '')
             if (this.group_image != null) formData.append('image', this.group_image)
 
             await this.groupStore.create_group(formData)
@@ -183,13 +185,15 @@ export default {
                     detail: this.errorMessage,
                     life: 4000,
                 })
-            else
+            else {
                 this.$toast.add({
                     severity: 'success',
                     summary: 'Группа успешно создана',
                     detail: this.errorMessage,
                     life: 4000,
                 })
+				this.$router.push({name: 'GroupCreate', params: {id: this.groupStore.new_id}})
+            }
         },
         notifyUser() {
             this.$toast.add({
@@ -217,7 +221,7 @@ export default {
                 const response = await axios.get(backendUrl + '/group/' + this.group_id)
                 this.group_name = response.data.name
                 this.group_description = response.data.description
-                this.group_private = response.data.is_private
+                this.group_private = response.data.is_private === 1
                 this.group_image = response.data.image
                 if (this.group_image != null && document.getElementById('img-label')) {
                     document.getElementById('img-label').innerHTML =
