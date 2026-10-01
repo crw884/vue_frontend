@@ -1,4 +1,5 @@
 <template>
+<AudioRegistry>
     <div class="flex row justify-center w-11/12 gap-10 mt-24"  v-if="!this.loading">
         <div class="w-1/12"></div>
         <div class="w-7/12">
@@ -32,8 +33,9 @@
 								<div class="break-all text-end">{{ post.text }}</div>
 
 							</div>
-							<audio v-if="post.audio" controls :src="post.audio"
-								   class="w-full rounded-2xl bg-mist-950"/>
+<!--							<audio v-if="post.audio" controls :src="post.audio" muted-->
+<!--								   class="w-full rounded-2xl bg-mist-950"/>-->
+							<AudioPlayer v-if="post.audio" :src="post.audio" />
 						</div>
 
 					</div>
@@ -92,6 +94,7 @@
             </div>
         </div>
     </div>
+</AudioRegistry>
 </template>
 
 <script>
@@ -107,10 +110,12 @@ import ProgressSpinner from 'primevue/progressspinner'
 import DeferredContent from 'primevue/deferredcontent'
 import Divider from 'primevue/divider'
 import Toast from 'primevue/toast'
+import AudioPlayer from '@/components/AudioPlayer.vue'
+import AudioRegistry from '@/components/AudioRegistry.vue'
 import { useAuthStore } from '@/stores/authStore.js'
 export default {
     name: 'Group',
-    components: { Card, Button, Image, ProgressSpinner, DeferredContent, Divider, Toast },
+    components: { Card, Button, Image, ProgressSpinner, DeferredContent, Divider, Toast, AudioPlayer, AudioRegistry },
     data() {
         return {
 			authStore: useAuthStore(),
