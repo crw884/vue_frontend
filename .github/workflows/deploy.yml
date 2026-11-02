@@ -42,4 +42,4 @@ jobs:
           rsync -az --delete \
             -e "ssh -i ~/.ssh/id_ed25519" \
             dist/ \
-            "$SSH_USER@$SSH_HOST:/var/www/vue_fronted/dist/"
+            "$SSH_USER@$SSH_HOST:/var/www/vue_frontend/dist/"
